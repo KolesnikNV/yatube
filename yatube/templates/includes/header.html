@@ -1,0 +1,83 @@
+{% load static %}
+<!-- Пакет JavaScript с Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"crossorigin="anonymous"></script>
+    <header>  
+      <nav class="navbar navbar-light" style="background-color: lightskyblue">
+        <div class="container-fluid">
+           <a class="navbar-brand" href={% url 'posts:index' %}>
+            <img src="{% static 'img/logo.png' %}" href="img/fav/fav.ico, {% url 'posts:index' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+            <span style="color:red">Ya</span>tube
+          </a>
+          
+          <!-- Кнопка меню -->
+          <ul class="nav nav-pills">
+            <div class="btn-group">
+              <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Меню</a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'about:author' %}"> Об авторе </a></li>
+                <li><a class="dropdown-item" href="{% url 'about:tech' %}"> Технологии</a></li>
+              </ul>
+            </div>
+          <!-- Кнопка меню -->
+
+        {% with request.resolver_match.view_name as view_name %}
+        <ul class="nav nav-pills">
+        <!--<li class="nav-item">              
+          <a class="nav-link {% if view_name  == 'about:author' %}active{% endif %}" 
+             href="{% url 'about:author' %}"> Об авторе </a>
+        </li>
+        <li class="nav-item">              
+          <a class="nav-link {% if view_name  == 'about:tech' %}active{% endif %}" 
+             href="{% url 'about:tech' %}"> Технологии </a>
+        </li>-->
+        {% if request.user.is_authenticated %}
+        <li class="nav-item">              
+          <a class="nav-link {% if view_name  == 'posts:post_create' %}active{% endif %}" 
+             href="{% url 'posts:post_create' %}"> Новая запись </a>
+        </li>
+        <!--<li class="nav-item">              
+          <a class="nav-link {% if view_name  == 'users:password_change' %}active{% endif %}" 
+             href="{% url 'users:password_change' %}"> Изменить пароль </a>
+        </li> -->
+        <li class="nav-item">              
+          <a class="nav-link {% if view_name  == 'posts:follow_index' %}active{% endif %}" 
+             href="{% url 'posts:follow_index' %}"> Подписки </a>
+        </li>
+        <!-- <li class="nav-item">              
+          <a class="nav-link {% if view_name  == 'users:logout' %}active{% endif %}" 
+             href="{% url 'users:logout' %}"> Выйти </a>
+        </li> -->
+        
+        <!-- Кнопка на логине пользователя -->
+        <ul class="nav nav-pills">
+          <div class="btn-group">
+            <a class="btn btn dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">Пользователь: {{ user.username }}</a>
+            <ul class="dropdown-menu">
+              {% if request.user.is_authenticated %}
+              <li><a class="dropdown-item"  href="{% url 'users:password_change' %}"> Изменить пароль</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item"  href="{% url 'users:logout' %}"> Выйти</a></li>
+              {% endif %}
+            </ul>
+          </div>
+        <!-- Кнопка на логине пользователя -->
+
+        <!--<a class="nav-link">
+            <span style="color:black"> Пользователь: {{ user.username }}</span>
+        </a> -->
+   
+        {% else %}
+        <li class="nav-item">              
+          <a class="nav-link {% if view_name  == 'users:login' %}active{% endif %}" 
+             href="{% url 'users:login' %}"> Войти </a>
+        </li>
+        <li class="nav-item">              
+          <a class="nav-link {% if view_name  == 'users:signup' %}active{% endif %}" 
+             href="{% url 'users:signup' %}"> Регистрация </a>
+        </li>
+        {% endif %}
+        </ul>
+        </div>
+      </nav>
+    </header>   
+    {% endwith %}  
