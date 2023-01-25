@@ -113,5 +113,7 @@ class PostCreateFormTests(TestCase):
             reverse("posts:post_detail", kwargs={"post_id": self.post.id}),
         )
         self.assertEqual(Comment.objects.count(), comments_count + 1)
-        self.assertTrue(Comment.objects.filter(text="Тестовый комментарий").exists())
+        self.assertTrue(
+            Comment.objects.filter(text="Тестовый комментарий").exists()
+        )
         self.assertEqual(r_2.status_code, HTTPStatus.FOUND)

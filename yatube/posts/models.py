@@ -65,11 +65,15 @@ class Comment(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="comments", null=True
     )
-    text = models.TextField("Текст комментария", help_text="Введите текст комментария")
+    text = models.TextField(
+        "Текст комментария", help_text="Введите текст комментария"
+    )
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        models.UniqueConstraint(fields=["user", "author"], name="unique_user_author")
+        models.UniqueConstraint(
+            fields=["user", "author"], name="unique_user_author"
+        )
 
 
 class Follow(models.Model):

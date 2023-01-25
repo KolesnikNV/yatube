@@ -40,7 +40,9 @@ def group_posts(request, slug):
     context = {
         "group": group,
     }
-    context.update(paginate_posts(request, group.posts.select_related("author")))
+    context.update(
+        paginate_posts(request, group.posts.select_related("author"))
+    )
     return render(request, template, context)
 
 
@@ -104,7 +106,9 @@ def post_edit(request, post_id):
     """Генерирует post_edit.html."""
     is_edit = True
     post = get_object_or_404(Post, pk=post_id)
-    form = PostForm(request.POST or None, files=request.FILES or None, instance=post)
+    form = PostForm(
+        request.POST or None, files=request.FILES or None, instance=post
+    )
     if request.user != post.author:
         return redirect("posts:post_detail", post.id)
     if form.is_valid():
