@@ -4,8 +4,9 @@ from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase
 from django.urls import reverse
+
 from posts.forms import PostForm
-from posts.models import Group, Post
+from posts.models import Comment, Group, Post
 
 User = get_user_model()
 
@@ -94,3 +95,23 @@ class PostCreateFormTests(TestCase):
         self.assertEqual(Post.objects.count(), tasks_count)
         self.assertTrue(Post.objects.filter(text="Тестовый текст2").exists())
         self.assertEqual(response.status_code, HTTPStatus.OK)
+
+    def test_comment_edit(self):
+        """Валидная форма создает комментарий."""
+        form_data = {"text": "Тестовый комментарий"}
+        comments_count = Comment.objects.count()
+        r_1 = self.authorized_client.post(
+            reverse("posts:add_comment", args=({self.post.id})),
+            data=form_data,
+        )
+        r_2 = self.guest_client.post(
+            reverse("posts:add_comment", args=({self.post.id})),
+            data=form_data,
+        )
+        self.assertRedirects(
+            r_1,
+            reverse("posts:post_detail", kwargs={"post_id": self.post.id}),
+        )
+        self.assertEqual(Comment.objects.count(), comments_count + 1)
+        self.assertTrue(Comment.objects.filter(text="Тестовый комментарий").exists())
+        self.assertEqual(r_2.status_code, HTTPStatus.FOUND)
