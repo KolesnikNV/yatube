@@ -104,10 +104,6 @@ class PostCreateFormTests(TestCase):
             reverse("posts:add_comment", args=({self.post.id})),
             data=form_data,
         )
-        r_2 = self.guest_client.post(
-            reverse("posts:add_comment", args=({self.post.id})),
-            data=form_data,
-        )
         self.assertRedirects(
             r_1,
             reverse("posts:post_detail", kwargs={"post_id": self.post.id}),
@@ -115,5 +111,13 @@ class PostCreateFormTests(TestCase):
         self.assertEqual(Comment.objects.count(), comments_count + 1)
         self.assertTrue(
             Comment.objects.filter(text="Тестовый комментарий").exists()
+        )
+
+    def test_authorized_client_comment(self):
+        """Комментарии недоступны гостю."""
+        form_data = {"text": "Тестовый комментарий"}
+        r_2 = self.guest_client.post(
+            reverse("posts:add_comment", args=({self.post.id})),
+            data=form_data,
         )
         self.assertEqual(r_2.status_code, HTTPStatus.FOUND)

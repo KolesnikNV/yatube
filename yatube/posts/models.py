@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import Q
 
 User = get_user_model()
 
@@ -72,7 +73,9 @@ class Comment(models.Model):
 
     class Meta:
         models.UniqueConstraint(
-            fields=["user", "author"], name="unique_user_author"
+            fields=["user"],
+            condition=Q(status="author"),
+            name="unique_user_author",
         )
 
 
@@ -84,7 +87,7 @@ class Follow(models.Model):
         on_delete=models.CASCADE,
         related_name="follower",
     )
-    author = author = models.ForeignKey(
+    author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="following", null=True
     )
 
@@ -93,3 +96,9 @@ class Follow(models.Model):
 
         verbose_name_plural = "Подписки"
         verbose_name = "Подписка"
+
+        models.UniqueConstraint(
+            fields=["user"],
+            condition=Q(status="author"),
+            name="unique_user_author",
+        )
