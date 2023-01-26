@@ -71,13 +71,6 @@ class Comment(models.Model):
     )
     created = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        models.UniqueConstraint(
-            fields=["user"],
-            condition=Q(status="author"),
-            name="unique_user_author",
-        )
-
 
 class Follow(models.Model):
     """Создание таблицы Follow."""
@@ -97,8 +90,9 @@ class Follow(models.Model):
         verbose_name_plural = "Подписки"
         verbose_name = "Подписка"
 
-        models.UniqueConstraint(
-            fields=["user"],
-            condition=Q(status="author"),
-            name="unique_user_author",
-        )
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "author"],
+                name="unique_user_author",
+            )
+        ]  # Надеюсь сейчас правильно :)
